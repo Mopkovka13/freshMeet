@@ -1,10 +1,10 @@
 package com.mopkovka.springboot.freshMeet.services;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.mopkovka.springboot.freshMeet.dto.Auth.JwtAuthResponse;
+import com.mopkovka.springboot.freshMeet.dto.Auth.SignInRequest;
+import com.mopkovka.springboot.freshMeet.dto.Auth.SignUpRequest;
 
-@Service
-@RequiredArgsConstructor
-public class AuthService {
-
+public interface AuthService {
+    public JwtAuthResponse signUp(SignUpRequest signUpRequest);
+    public JwtAuthResponse signIn(SignInRequest signInRequest);
 }

@@ -1,0 +1,59 @@
+version: '3'
+  # docker ps
+  # docker exec -it postgres bash - войти в контейнер
+  # psql -U mopkovka - войти в postgres
+  # \l   - список баз
+  # \c customer - подключиться по названию
+  # ctrl + D - exit
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: mopkovka
+      POSTGRES_PASSWORD: admin
+      PGDATA: /data/postgres
+    volumes:
+      - db:/data/postgres
+    ports:
+      - "5332:5432"
+    networks:
+      - db
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "82:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: evgeniyneskin13@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - db
+    networks:
+      - db
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-app
+    ports:
+      - "8080:8080"
+    environment:
+      JWT_KEY: 154416cce613886f31783e1899adf4451ff797854d7530196c471455d9877b2b
+    depends_on:
+      - db
+    networks:
+      - db
+    restart: unless-stopped
+
+
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:
